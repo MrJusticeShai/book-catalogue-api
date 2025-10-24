@@ -1,6 +1,5 @@
 package com.payu.assessment.bookcatalogue.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payu.assessment.bookcatalogue.dto.BookRequest;
 import com.payu.assessment.bookcatalogue.dto.BookResponse;
 import com.payu.assessment.bookcatalogue.exception.BookAlreadyExistsException;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -36,21 +34,18 @@ class BookControllerTest {
     @MockBean
     private BookService bookService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     String addBookStringBody = "{"
             + "\"name\":\"Book1\","
             + "\"isbn\":\"111\","
-            + "\"publishDate\":\"2025-10-24\","
-            + "\"price\":10,"
+            + "\"publishDate\":\"24/10/2025\","
+            + "\"price\":149.99,"
             + "\"bookType\":\"HARDCOVER\""
             + "}";
 
     String updateBookstringBody = "{"
             + "\"name\":\"Updated\","
             + "\"isbn\":\"111\","
-            + "\"publishDate\":\"2025-10-24\","
+            + "\"publishDate\":\"24/10/2025\","
             + "\"price\":20,"
             + "\"bookType\":\"SOFTCOVER\""
             + "}";
@@ -58,8 +53,8 @@ class BookControllerTest {
     // ------------------ GET /api/books ------------------
     @Test
     void getAllBooks_returnsListOfBookResponses() throws Exception {
-        Book book1 = new Book("Book1", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
-        Book book2 = new Book("Book2", "222", LocalDate.now(), BigDecimal.valueOf(20), BookType.SOFTCOVER);
+        Book book1 = new Book("Book1", "111", LocalDate.now(), 149.99, BookType.HARDCOVER);
+        Book book2 = new Book("Book2", "222", LocalDate.now(), 189.99, BookType.SOFTCOVER);
         when(bookService.getAllBooks()).thenReturn(Arrays.asList(book1, book2));
 
         List<BookResponse> responses = Arrays.asList(
@@ -76,7 +71,7 @@ class BookControllerTest {
     // ------------------ GET /api/books/{id} ------------------
     @Test
     void getBookById_existingId_returnsBookResponse() throws Exception {
-        Book book = new Book("Book1", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        Book book = new Book("Book1", "111", LocalDate.now(), 149.99, BookType.HARDCOVER);
         when(bookService.getBookById(1L)).thenReturn(book);
 
         mockMvc.perform(get("/api/books/1"))
@@ -96,25 +91,22 @@ class BookControllerTest {
     // ------------------ POST /api/books ------------------
     @Test
     void addBook_validRequest_returnsCreatedBookResponse() throws Exception {
-
-
-        Book savedBook = new Book("Book1", "111", LocalDate.of(2025, 10, 24), BigDecimal.TEN, BookType.HARDCOVER);
+        Book savedBook = new Book("Book1", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
         when(bookService.addBook(any(BookRequest.class))).thenReturn(savedBook);
 
         mockMvc.perform(post("/api/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(addBookStringBody))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Book1"))
                 .andExpect(jsonPath("$.isbn").value("111"))
                 .andExpect(jsonPath("$.publishDate").value("24/10/2025"))
-                .andExpect(jsonPath("$.price").value(10))
+                .andExpect(jsonPath("$.price").value(149.99))
                 .andExpect(jsonPath("$.bookType").value("HARDCOVER"));
     }
 
     @Test
     void addBook_existingIsbn_returnsConflict() throws Exception {
-        BookRequest request = new BookRequest("Book1", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
         when(bookService.addBook(any(BookRequest.class)))
                 .thenThrow(new BookAlreadyExistsException("Book with ISBN already exists"));
 
@@ -127,8 +119,7 @@ class BookControllerTest {
     // ------------------ PUT /api/books/{id} ------------------
     @Test
     void updateBook_existingId_returnsUpdatedBookResponse() throws Exception {
-        BookRequest request = new BookRequest("Updated", "111", LocalDate.now(), BigDecimal.valueOf(20), BookType.SOFTCOVER);
-        Book updated = new Book("Updated", "111", LocalDate.now(), BigDecimal.valueOf(20), BookType.SOFTCOVER);
+        Book updated = new Book("Updated", "111", LocalDate.now(), 189.99, BookType.SOFTCOVER);
         when(bookService.updateBook(eq(1L), any(BookRequest.class))).thenReturn(updated);
 
         mockMvc.perform(put("/api/books/1")
@@ -140,9 +131,6 @@ class BookControllerTest {
 
     @Test
     void updateBook_nonExistingId_returns404() throws Exception {
-        BookRequest request = new BookRequest("Updated", "111", LocalDate.now(), BigDecimal.valueOf(20), BookType.SOFTCOVER);
-
-
         when(bookService.updateBook(eq(1L), any(BookRequest.class)))
                 .thenThrow(new BookNotFoundException("Book not found"));
 

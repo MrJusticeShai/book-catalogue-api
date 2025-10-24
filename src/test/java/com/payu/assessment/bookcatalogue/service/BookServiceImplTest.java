@@ -11,7 +11,6 @@ import com.payu.assessment.bookcatalogue.util.BookMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
@@ -34,8 +33,8 @@ class BookServiceImplTest {
     // ----------------- getAllBooks -----------------
     @Test
     void getAllBooks_returnsAllBooks() {
-        Book book1 = new Book("Book1", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
-        Book book2 = new Book("Book2", "222", LocalDate.now(), BigDecimal.valueOf(20), BookType.SOFTCOVER);
+        Book book1 = new Book("Book1", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
+        Book book2 = new Book("Book2", "222", LocalDate.of(2025, 10, 24), 189.99, BookType.SOFTCOVER);
         when(bookRepository.findAll()).thenReturn(Arrays.asList(book1, book2));
 
         List<Book> result = bookService.getAllBooks();
@@ -47,7 +46,7 @@ class BookServiceImplTest {
     // ----------------- getBookById -----------------
     @Test
     void getBookById_existingId_returnsBook() {
-        Book book = new Book("Book1", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        Book book = new Book("Book1", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
 
         Book result = bookService.getBookById(1L);
@@ -66,7 +65,7 @@ class BookServiceImplTest {
     // ----------------- addBook -----------------
     @Test
     void addBook_uniqueIsbn_savesBook() {
-        BookRequest request = new BookRequest("Book1", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        BookRequest request = new BookRequest("Book1", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
         when(bookRepository.existsByIsbn("111")).thenReturn(false);
 
         Book savedBook = BookMapper.fromRequest(request);
@@ -80,7 +79,7 @@ class BookServiceImplTest {
 
     @Test
     void addBook_existingIsbn_throwsException() {
-        BookRequest request = new BookRequest("Book1", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        BookRequest request = new BookRequest("Book1", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
         when(bookRepository.existsByIsbn("111")).thenReturn(true);
 
         assertThrows(BookAlreadyExistsException.class, () -> bookService.addBook(request));
@@ -90,34 +89,34 @@ class BookServiceImplTest {
     // ----------------- updateBook -----------------
     @Test
     void updateBook_existingBook_updatesFields() {
-        Book existing = new Book("Old Book", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        Book existing = new Book("Old Book", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
         when(bookRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(bookRepository.save(any(Book.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        BookRequest request = new BookRequest("New Book", "111", LocalDate.now().plusDays(1), BigDecimal.valueOf(20), BookType.SOFTCOVER);
+        BookRequest request = new BookRequest("New Book", "111", LocalDate.of(2025, 10, 24).plusDays(1), 189.99, BookType.SOFTCOVER);
 
         Book result = bookService.updateBook(1L, request);
 
         assertEquals("New Book", result.getName());
         assertEquals("111", result.getIsbn()); // ISBN immutable
-        assertEquals(BigDecimal.valueOf(20), result.getPrice());
+        assertEquals(189.99, result.getPrice());
         assertEquals(BookType.SOFTCOVER, result.getBookType());
     }
 
     @Test
     void updateBook_nonExistingBook_throwsException() {
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
-        BookRequest request = new BookRequest("New Book", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        BookRequest request = new BookRequest("New Book", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
 
         assertThrows(BookNotFoundException.class, () -> bookService.updateBook(1L, request));
     }
 
     @Test
     void updateBook_noChanges_doesNotSave() {
-        Book existing = new Book("Same Book", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        Book existing = new Book("Same Book", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
         when(bookRepository.findById(1L)).thenReturn(Optional.of(existing));
 
-        BookRequest request = new BookRequest("Same Book", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        BookRequest request = new BookRequest("Same Book", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
 
         bookService.updateBook(1L, request);
 
@@ -128,7 +127,7 @@ class BookServiceImplTest {
     // ----------------- deleteBook -----------------
     @Test
     void deleteBook_existingBook_deletesBook() {
-        Book existing = new Book("Book1", "111", LocalDate.now(), BigDecimal.TEN, BookType.HARDCOVER);
+        Book existing = new Book("Book1", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
         when(bookRepository.findById(1L)).thenReturn(Optional.of(existing));
 
         bookService.deleteBook(1L);

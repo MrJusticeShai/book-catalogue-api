@@ -31,21 +31,18 @@ public class BookController {
                 .collect(Collectors.toList());
     }
 
-    // Get a single book by ID
     @GetMapping("/{id}")
     public ResponseEntity<BookResponse> getBookById(@PathVariable Long id) {
         Book book = bookService.getBookById(id);
         return ResponseEntity.ok(BookMapper.toResponse(book));
     }
 
-    // Add a new book
     @PostMapping
     public ResponseEntity<BookResponse> addBook(@RequestBody BookRequest request) {
         Book created = bookService.addBook(request);
         return ResponseEntity.ok(BookMapper.toResponse(created));
     }
 
-    // Update an existing book (null-safe, ISBN immutable)
     @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBook(
             @PathVariable Long id,
@@ -56,7 +53,6 @@ public class BookController {
         return ResponseEntity.ok(BookMapper.toResponse(updated));
     }
 
-    // Delete a book by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);

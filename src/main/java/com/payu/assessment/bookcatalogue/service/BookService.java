@@ -1,7 +1,6 @@
 package com.payu.assessment.bookcatalogue.service;
 
 import com.payu.assessment.bookcatalogue.dto.BookRequest;
-import com.payu.assessment.bookcatalogue.dto.BookResponse;
 import com.payu.assessment.bookcatalogue.model.Book;
 
 import java.util.List;

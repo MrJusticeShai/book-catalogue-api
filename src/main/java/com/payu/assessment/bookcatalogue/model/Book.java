@@ -1,11 +1,6 @@
 package com.payu.assessment.bookcatalogue.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.payu.assessment.bookcatalogue.dto.BookRequest;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -25,7 +20,8 @@ public class Book {
     private String isbn;
 
     private LocalDate publishDate;
-    private BigDecimal price;
+
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     private BookType bookType;
@@ -33,7 +29,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(String name, String isbn, LocalDate publishDate, BigDecimal price, BookType bookType) {
+    public Book(String name, String isbn, LocalDate publishDate, Double price, BookType bookType) {
         this.name = name;
         this.isbn = isbn;
         this.publishDate = publishDate;
@@ -61,11 +57,11 @@ public class Book {
         this.publishDate = publishDate;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
