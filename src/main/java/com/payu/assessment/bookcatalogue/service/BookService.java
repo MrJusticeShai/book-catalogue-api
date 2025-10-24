@@ -1,5 +1,7 @@
 package com.payu.assessment.bookcatalogue.service;
 
+import com.payu.assessment.bookcatalogue.dto.BookRequest;
+import com.payu.assessment.bookcatalogue.dto.BookResponse;
 import com.payu.assessment.bookcatalogue.model.Book;
 
 import java.util.List;
@@ -8,9 +10,11 @@ public interface BookService {
 
     List<Book> getAllBooks();
 
-    Book addBook(Book book);
+    Book getBookById(Long id);
 
-    Book updateBook(Long id, Book book);
+    Book addBook(BookRequest bookRequest);
+
+    Book updateBook(Long id, BookRequest bookRequest);
 
     void deleteBook(Long id);
 }
