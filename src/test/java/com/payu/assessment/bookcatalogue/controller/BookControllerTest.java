@@ -34,7 +34,7 @@ class BookControllerTest {
     @MockBean
     private BookService bookService;
 
-    String addBookStringBody = "{"
+    private final String addBookStringBody = "{"
             + "\"name\":\"Book1\","
             + "\"isbn\":\"111\","
             + "\"publishDate\":\"24/10/2025\","
@@ -42,19 +42,21 @@ class BookControllerTest {
             + "\"bookType\":\"HARDCOVER\""
             + "}";
 
-    String updateBookstringBody = "{"
+    private final String updateBookstringBody = "{"
             + "\"name\":\"Updated\","
             + "\"isbn\":\"111\","
             + "\"publishDate\":\"24/10/2025\","
             + "\"price\":20,"
             + "\"bookType\":\"SOFTCOVER\""
             + "}";
+    
+    private final LocalDate testLocalDate = LocalDate.of(2025, 10, 24);
 
     // ------------------ GET /api/books ------------------
     @Test
     void getAllBooks_returnsListOfBookResponses() throws Exception {
-        Book book1 = new Book("Book1", "111", LocalDate.now(), 149.99, BookType.HARDCOVER);
-        Book book2 = new Book("Book2", "222", LocalDate.now(), 189.99, BookType.SOFTCOVER);
+        Book book1 = new Book("Book1", "111", testLocalDate, 149.99, BookType.HARDCOVER);
+        Book book2 = new Book("Book2", "222", testLocalDate, 189.99, BookType.SOFTCOVER);
         when(bookService.getAllBooks()).thenReturn(Arrays.asList(book1, book2));
 
         List<BookResponse> responses = Arrays.asList(
@@ -71,7 +73,7 @@ class BookControllerTest {
     // ------------------ GET /api/books/{id} ------------------
     @Test
     void getBookById_existingId_returnsBookResponse() throws Exception {
-        Book book = new Book("Book1", "111", LocalDate.now(), 149.99, BookType.HARDCOVER);
+        Book book = new Book("Book1", "111", testLocalDate, 149.99, BookType.HARDCOVER);
         when(bookService.getBookById(1L)).thenReturn(book);
 
         mockMvc.perform(get("/api/books/1"))
@@ -91,7 +93,7 @@ class BookControllerTest {
     // ------------------ POST /api/books ------------------
     @Test
     void addBook_validRequest_returnsCreatedBookResponse() throws Exception {
-        Book savedBook = new Book("Book1", "111", LocalDate.of(2025, 10, 24), 149.99, BookType.HARDCOVER);
+        Book savedBook = new Book("Book1", "111", testLocalDate, 149.99, BookType.HARDCOVER);
         when(bookService.addBook(any(BookRequest.class))).thenReturn(savedBook);
 
         mockMvc.perform(post("/api/books")
@@ -119,7 +121,7 @@ class BookControllerTest {
     // ------------------ PUT /api/books/{id} ------------------
     @Test
     void updateBook_existingId_returnsUpdatedBookResponse() throws Exception {
-        Book updated = new Book("Updated", "111", LocalDate.now(), 189.99, BookType.SOFTCOVER);
+        Book updated = new Book("Updated", "111", testLocalDate, 189.99, BookType.SOFTCOVER);
         when(bookService.updateBook(eq(1L), any(BookRequest.class))).thenReturn(updated);
 
         mockMvc.perform(put("/api/books/1")
