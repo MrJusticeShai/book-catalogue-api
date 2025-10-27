@@ -109,13 +109,13 @@ Inspect the in-memory H2 database:
 
 ## 📦 API Endpoints
 
-| Endpoint        | Method | Purpose                       | HTTP Statuses                                |
-|-----------------|--------|-------------------------------|----------------------------------------------|
-| /api/books      | GET    | List all books                | 200 (OK)                                     |
-| /api/books/{id} | GET    | Retrieve a book by ID         | 200 (OK), 404 (Not Found)                    |
-| /api/books      | POST   | Create a new book             | 201 (Created), 400 (Bad Request)             |
-| /api/books/{id} | PUT    | Update an existing book by ID | 200 (OK), 400 (Bad Request), 404 (Not Found) |
-| /api/books/{id} | DELETE | Delete a book by ID           | 204 (No Content), 404 (Not Found)            |
+| Endpoint               | Method | Purpose                         | HTTP Statuses                                |
+|------------------------|--------|---------------------------------|----------------------------------------------|
+| /api/books             | GET    | List all books                  | 200 (OK)                                     |
+| /api/books/isbn/{isbn} | GET    | Retrieve a book by ISBN         | 200 (OK), 404 (Not Found)                    |
+| /api/books             | POST   | Create a new book               | 201 (Created), 400 (Bad Request)             |
+| /api/books/isbn/{isbn} | PUT    | Update an existing book by ISBN | 200 (OK), 400 (Bad Request), 404 (Not Found) |
+| /api/books/isbn/{isbn} | DELETE | Delete a book by ISBN           | 204 (No Content), 404 (Not Found)            |
 
 ### Example JSON Body (POST / PUT)
 
@@ -144,16 +144,21 @@ curl -X POST http://localhost:9000/api/books \
 curl http://localhost:9000/api/books
 ```
 
+📖 **Get Book By Isbn**
+```
+curl http://localhost:9000/api/books/isbn/111
+```
+
 ✏️ **Update a Book**
 ```
-curl -X PUT http://localhost:9000/api/books/1 \
+curl -X PUT http://localhost:9000/api/books/isbn/111 \
 -H "Content-Type: application/json" \
 -d '{"name":"Updated Book","isbn":"111","publishDate":"25/10/2025","price":24.99,"bookType":"SOFTCOVER"}'
 ```
 
 ❌ Delete a Book
 ```
-curl -X DELETE http://localhost:9000/api/books/1
+curl -X DELETE http://localhost:9000/api/books/isbn/111
 ```
 > All endpoints follow RESTful principles with clean separation of layers.
 
