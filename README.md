@@ -40,30 +40,7 @@ Follow these steps to **clone, build, and run** the API locally.
   # Clone the repository
   git clone https://github.com/MrJusticeShai/book-catalogue-api.git
   cd book-catalogue-api
-
-  # Build the project
-  mvn clean install
-
-  # Run the Spring Boot application
-  mvn spring-boot:run
-```
-The service will be accessible at: http://localhost:9000
-
-Using Executable Jar
-```
-# Build the project (creates fat jar)
-mvn clean package
-
-# Run the jar
-java -jar target/book-catalogue-api-0.0.1-SNAPSHOT.jar
-```
-> 💡 Tip: The jar method is useful if Maven is not installed or for deployment purposes.
-</details>
-
----
-
-<details><summary> Windows Instructions (Command Prompt / PowerShell) </summary>
-
+  
 ```bash
 # Clone the repository
 git clone https://github.com/MrJusticeShai/book-catalogue-api.git
@@ -79,20 +56,28 @@ sudo apt install maven -y
 
 # Build the project
 mvn clean package
-# Run the Spring Boot web application
-mvn spring-boot:run
 #  Run unit tests
 mvn test
+# Run the Spring Boot web application
+mvn spring-boot:run
 
 ```
 The service will be accessible at: http://localhost:9000
+</details>
 
-Using Executable Jar
+---
+
+
+<details>
+<summary> Windows Instructions (Command Prompt / PowerShell) </summary>
 
 ```bash
-# Build the project (creates fat jar)
-mvn clean package
+# Clone the repository
+git clone https://github.com/MrJusticeShai/book-catalogue-api.git
+cd book-catalogue-api
 
+#  Install Maven (if not already installed)
+# macOS (via Homebrew)
 # Download Apache Maven from https://maven.apache.org/download.cgi
 # Extract and add the 'bin' directory to your PATH
 # Example: C:\apache-maven-3.9.9\bin
@@ -103,11 +88,10 @@ mvn clean package
 mvn test
 # Run the Spring Boot web application
 mvn spring-boot:run
-### Or
-# Run the jar
-java -jar target\book-catalogue-api-0.0.1-SNAPSHOT.jar
+
 ```
-> 💡 Tip: The jar method is useful if Maven is not installed or for deployment purposes.
+The service will be accessible at: http://localhost:9000
+
 </details>
 
 ---
