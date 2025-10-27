@@ -69,19 +69,41 @@ java -jar target/book-catalogue-api-0.0.1-SNAPSHOT.jar
 git clone https://github.com/MrJusticeShai/book-catalogue-api.git
 cd book-catalogue-api
 
-# Build the project
-mvn clean install
+#  Install Maven (if not already installed)
+# macOS (via Homebrew)
+brew install maven
 
-# Run the Spring Boot application
+# Linux (Debian/Ubuntu)
+sudo apt update
+sudo apt install maven -y
+
+# Build the project
+mvn clean package
+# Run the Spring Boot web application
 mvn spring-boot:run
+#  Run unit tests
+mvn test
+
 ```
 The service will be accessible at: http://localhost:9000
 
 Using Executable Jar
-```
+
+```bash
 # Build the project (creates fat jar)
 mvn clean package
 
+# Download Apache Maven from https://maven.apache.org/download.cgi
+# Extract and add the 'bin' directory to your PATH
+# Example: C:\apache-maven-3.9.9\bin
+
+# Build and package the project
+mvn clean package
+#  Run unit tests
+mvn test
+# Run the Spring Boot web application
+mvn spring-boot:run
+### Or
 # Run the jar
 java -jar target\book-catalogue-api-0.0.1-SNAPSHOT.jar
 ```
