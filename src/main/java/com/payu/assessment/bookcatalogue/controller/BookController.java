@@ -2,6 +2,7 @@ package com.payu.assessment.bookcatalogue.controller;
 
 import com.payu.assessment.bookcatalogue.dto.BookRequest;
 import com.payu.assessment.bookcatalogue.dto.BookResponse;
+import com.payu.assessment.bookcatalogue.exception.BookNotFoundException;
 import com.payu.assessment.bookcatalogue.model.Book;
 import com.payu.assessment.bookcatalogue.service.BookService;
 import com.payu.assessment.bookcatalogue.util.BookMapper;
@@ -46,14 +47,12 @@ public class BookController {
 
     @PutMapping("/isbn/{isbn}")
     public ResponseEntity<BookResponse> updateBookByIsbn(@PathVariable String isbn, @RequestBody BookRequest updatedBook) {
-        Book existing = bookService.getBookByIsbn(isbn);
-        if (existing == null) return ResponseEntity.notFound().build();
-
-        // Ensure the ISBN is not altered
-        updatedBook.setIsbn(existing.getIsbn());
-
-        Book saved = bookService.updateBookByIsbn(isbn, updatedBook);
-        return ResponseEntity.ok(BookMapper.toResponse(saved));
+        try {
+            Book saved = bookService.updateBookByIsbn(isbn, updatedBook);
+            return ResponseEntity.ok(BookMapper.toResponse(saved));
+        } catch (BookNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 

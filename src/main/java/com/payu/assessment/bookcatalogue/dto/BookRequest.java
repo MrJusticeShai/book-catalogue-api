@@ -48,6 +48,10 @@ public class BookRequest {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getIsbn() {
         return isbn;
     }
@@ -60,11 +64,23 @@ public class BookRequest {
         return publishDate;
     }
 
+    public void setPublishDate(LocalDate publishDate) {
+        this.publishDate = publishDate;
+    }
+
     public Double getPrice() {
         return price;
     }
 
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     public BookType getBookType() {
         return bookType;
+    }
+
+    public void setBookType(BookType bookType) {
+        this.bookType = bookType;
     }
 }
