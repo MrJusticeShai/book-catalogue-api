@@ -9,13 +9,11 @@ public interface BookService {
 
     List<Book> getAllBooks();
 
-    Book getBookById(Long id);
-
     Book getBookByIsbn(String isbn);
+
+    boolean deleteBookByIsbn(String isbn);
 
     Book addBook(BookRequest bookRequest);
 
-    Book updateBook(Long id, BookRequest bookRequest);
-
-    void deleteBook(Long id);
+    Book updateBookByIsbn(String isbn, BookRequest bookRequest);
 }

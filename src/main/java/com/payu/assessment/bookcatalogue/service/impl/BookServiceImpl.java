@@ -10,6 +10,7 @@ import com.payu.assessment.bookcatalogue.util.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -28,15 +29,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookById(Long id) {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with id " + id));
+    public Book getBookByIsbn(String isbn) {
+        return bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new BookNotFoundException("Book with ISBN " + isbn + " not found"));
     }
 
     @Override
-    public Book getBookByIsbn(String isbn) {
-        return bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with ISBN: " + isbn));
+    @Transactional
+    public boolean deleteBookByIsbn(String isbn) {
+        if (!bookRepository.existsByIsbn(isbn)) {
+            throw new BookNotFoundException("Book with ISBN " + isbn + " not found");
+        }
+
+        bookRepository.deleteByIsbn(isbn);
+        return true;
     }
 
 
@@ -53,20 +59,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book updateBook(Long id, BookRequest request) {
-        Book existing = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with id " + id));
-        boolean updated = BookMapper.updateFromRequest(existing, request);
+    public Book updateBookByIsbn(String isbn, BookRequest bookRequest) {
+        Book existing = getBookByIsbn(isbn);
+        boolean updated = BookMapper.updateFromRequest(existing, bookRequest);
         if (updated) {
             return bookRepository.save(existing);
         }
         return existing;
-    }
-
-    @Override
-    public void deleteBook(Long id) {
-        Book existing = bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("Book with id " + id + " not found"));
-        bookRepository.delete(existing);
     }
 }

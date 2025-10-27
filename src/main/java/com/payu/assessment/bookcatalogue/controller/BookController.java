@@ -31,15 +31,10 @@ public class BookController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BookResponse> getBookById(@PathVariable Long id) {
-        Book book = bookService.getBookById(id);
-        return ResponseEntity.ok(BookMapper.toResponse(book));
-    }
-
     @GetMapping("/isbn/{isbn}")
     public ResponseEntity<BookResponse> getBookByIsbn(@PathVariable String isbn) {
         Book book = bookService.getBookByIsbn(isbn);
+        if (book == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(BookMapper.toResponse(book));
     }
 
@@ -49,19 +44,23 @@ public class BookController {
         return ResponseEntity.ok(BookMapper.toResponse(created));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<BookResponse> updateBook(
-            @PathVariable Long id,
-            @RequestBody BookRequest request)
-    {
+    @PutMapping("/isbn/{isbn}")
+    public ResponseEntity<BookResponse> updateBookByIsbn(@PathVariable String isbn, @RequestBody BookRequest updatedBook) {
+        Book existing = bookService.getBookByIsbn(isbn);
+        if (existing == null) return ResponseEntity.notFound().build();
 
-        Book updated = bookService.updateBook(id, request);
-        return ResponseEntity.ok(BookMapper.toResponse(updated));
+        // Ensure the ISBN is not altered
+        updatedBook.setIsbn(existing.getIsbn());
+
+        Book saved = bookService.updateBookByIsbn(isbn, updatedBook);
+        return ResponseEntity.ok(BookMapper.toResponse(saved));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-        bookService.deleteBook(id);
+
+    @DeleteMapping("/isbn/{isbn}")
+    public ResponseEntity<Void> deleteBookByIsbn(@PathVariable String isbn) {
+        boolean deleted = bookService.deleteBookByIsbn(isbn);
+        if (!deleted) return ResponseEntity.notFound().build();
         return ResponseEntity.noContent().build();
     }
 

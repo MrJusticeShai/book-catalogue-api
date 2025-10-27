@@ -52,6 +52,10 @@ public class BookRequest {
         return isbn;
     }
 
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
     public LocalDate getPublishDate() {
         return publishDate;
     }
