@@ -11,6 +11,8 @@ public interface BookService {
 
     Book getBookById(Long id);
 
+    Book getBookByIsbn(String isbn);
+
     Book addBook(BookRequest bookRequest);
 
     Book updateBook(Long id, BookRequest bookRequest);

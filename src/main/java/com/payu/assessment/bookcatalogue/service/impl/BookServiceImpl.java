@@ -34,6 +34,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Book getBookByIsbn(String isbn) {
+        return bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new BookNotFoundException("Book not found with ISBN: " + isbn));
+    }
+
+
+    @Override
     public Book addBook(BookRequest bookRequest) {
         if (bookRepository.existsByIsbn(bookRequest.getIsbn())) {
             throw new BookAlreadyExistsException(
