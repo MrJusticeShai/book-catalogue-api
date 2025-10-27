@@ -90,6 +90,27 @@ class BookControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    // ------------------ GET /api/books/isbn/{isbn} ------------------
+    @Test
+    void getBookByIsbn_existingIsbn_returnsBookResponse() throws Exception {
+        Book book = new Book("Book1", "111", testLocalDate, 149.99, BookType.HARDCOVER);
+        when(bookService.getBookByIsbn("111")).thenReturn(book);
+
+        mockMvc.perform(get("/api/books/isbn/111"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Book1"))
+                .andExpect(jsonPath("$.isbn").value("111"));
+    }
+
+    @Test
+    void getBookByIsbn_nonExistingIsbn_returns404() throws Exception {
+        when(bookService.getBookByIsbn("111")).thenThrow(new BookNotFoundException("Book not found"));
+
+        mockMvc.perform(get("/api/books/isbn/111"))
+                .andExpect(status().isNotFound());
+    }
+
+
     // ------------------ POST /api/books ------------------
     @Test
     void addBook_validRequest_returnsCreatedBookResponse() throws Exception {

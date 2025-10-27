@@ -63,6 +63,24 @@ class BookServiceImplTest {
         assertThrows(BookNotFoundException.class, () -> bookService.getBookById(1L));
     }
 
+    // ----------------- getBookByIsbn -----------------
+    @Test
+    void getBookByIsbn_existingIsbn_returnsBook() {
+        Book book = new Book("Book1", "111", testLocalDate, 149.99, BookType.HARDCOVER);
+        when(bookRepository.findByIsbn("111")).thenReturn(Optional.of(book));
+
+        Book result = bookService.getBookByIsbn("111");
+
+        assertEquals("Book1", result.getName());
+    }
+
+    @Test
+    void getBookByIsbn_nonExistingIsbn_throwsException() {
+        when(bookRepository.findByIsbn("111")).thenReturn(Optional.empty());
+
+        assertThrows(BookNotFoundException.class, () -> bookService.getBookById(1L));
+    }
+
 
     // ----------------- addBook -----------------
     @Test
